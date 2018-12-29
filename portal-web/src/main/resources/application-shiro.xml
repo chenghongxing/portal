@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd" default-lazy-init="true">
+
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="jdbcRealm"/>
+        <!--<property name="cacheManager" ref="cacheManager"/>-->
+    </bean>
+    <!--<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">-->
+        <!--<property name="cacheManagerConfigFile" value="classpath:ehcache.xml"></property>-->
+    <!--</bean>-->
+    <bean id="jdbcRealm" class="com.cheng.shiro.MyshiroRealm">
+        <property name="credentialsMatcher">
+            <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+                <property name="hashAlgorithmName" value="MD5"/>
+                <property name="hashIterations" value="1024"/>
+                <property name="storedCredentialsHexEncoded" value="true"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"></property>
+        <property name="loginUrl" value="/login"></property>
+        <property name="unauthorizedUrl" value="/nopermission"></property>
+        <property name="filterChainDefinitions">
+            <value>
+                /doLogin = anon
+                / =anon
+                /verifyCode = anon
+                /sendMsg/* = anon
+                /msgLogin = anon
+                /* =authc
+            </value>
+        </property>
+    </bean>
+</beans>
+
