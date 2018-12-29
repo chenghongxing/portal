@@ -28,7 +28,13 @@ public class MyshiroRealm extends AuthenticatingRealm {
         UsernamePasswordToken userToken =(UsernamePasswordToken)token;
         String username = userToken.getUsername();
         User user = null;
-        user = userService.selectUserByName(username);
+        try {
+            user = userService.selectUserByName(username);
+            logger.info("查询用户信息-----username="+username);
+        } catch (CustomException e) {
+            logger.error("查询用户信息发生异常----"+e.getMessage());
+            throw new CustomException("3","查询用户信息发生异常");
+        }
         if (user==null){
             throw new UnknownAccountException("账户"+username+"不存在！");
         }
@@ -39,4 +45,9 @@ public class MyshiroRealm extends AuthenticatingRealm {
         return info;
     }
 
+    public static void main(String[] args) {
+        ByteSource byteSource = ByteSource.Util.bytes("201501450300");
+        Object obj = new SimpleHash("MD5","123456",byteSource,1024);
+        System.out.println(obj);
+    }
 }
