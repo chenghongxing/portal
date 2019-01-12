@@ -149,9 +149,7 @@ public class LoginController {
             String sessionId = request.getSession().getId();
             jedisClient.hset(sessionId,"msgCode",verifyCode);
             jedisClient.expire(sessionId,300);
-            int i =0;
-            i++;
-            jedisClient.set(to,String.valueOf(i));
+            jedisClient.incr(to);
             jedisClient.expire(to,300);
             return null;
         } catch (Exception e) {
