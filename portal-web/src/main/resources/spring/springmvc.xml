@@ -9,10 +9,13 @@
         http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+    <context:property-placeholder location="classpath:mail.properties" ignore-unresolvable="true"/>
     <context:component-scan base-package="com.cheng" />
     <mvc:annotation-driven>
         <mvc:message-converters>
-            <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8"/>
+            </bean>
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
         </mvc:message-converters>
     </mvc:annotation-driven>
@@ -54,5 +57,24 @@
     <mvc:resources mapping="/img/**" location="/img/"></mvc:resources>
     <mvc:resources mapping="/html/**" location="/html/"></mvc:resources>
     <bean class="com.cheng.exception.CustomExceptionResolver"/>
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.cheng.interceptor.MyInterceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+    <!--配置邮件接口-->
+    <bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="${mail.smtp.host}"/>
+        <property name="username" value="${mail.smtp.username}"/>
+        <property name="password" value="${mail.smtp.password}"/>
+        <property name="defaultEncoding" value="${mail.smtp.defaultEncoding}"/>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
+                <prop key="mail.smtp.timeout">${mail.smtp.timeout}</prop>
+            </props>
+        </property>
+    </bean>
 </beans>
 

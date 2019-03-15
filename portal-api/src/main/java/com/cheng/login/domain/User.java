@@ -3,7 +3,11 @@ package com.cheng.login.domain;
 import java.io.Serializable;
 import java.util.Date;
 
-public class User extends UserKey implements Serializable{
+public class User implements Serializable{
+    private Integer id;
+
+    private String userNo;
+
     private String username;
 
     private String password;
@@ -14,19 +18,37 @@ public class User extends UserKey implements Serializable{
 
     private String phone;
 
-    private Integer sex;
+    private String sex;
 
     private Integer age;
 
-    private Integer status;
+    private String status;
 
-    private Date createTime;
+    private String createTime;
 
-    private Date updateTime;
+    private String updateTime;
 
     private Date lastLoginTime;
 
     private String partName;
+
+    private String lastUpdateUser;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getUserNo() {
+        return userNo;
+    }
+
+    public void setUserNo(String userNo) {
+        this.userNo = userNo == null ? null : userNo.trim();
+    }
 
     public String getUsername() {
         return username;
@@ -68,12 +90,12 @@ public class User extends UserKey implements Serializable{
         this.phone = phone == null ? null : phone.trim();
     }
 
-    public Integer getSex() {
+    public String getSex() {
         return sex;
     }
 
-    public void setSex(Integer sex) {
-        this.sex = sex;
+    public void setSex(String sex) {
+        this.sex = sex == null ? null : sex.trim();
     }
 
     public Integer getAge() {
@@ -84,28 +106,28 @@ public class User extends UserKey implements Serializable{
         this.age = age;
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
-        this.status = status;
+    public void setStatus(String status) {
+        this.status = status == null ? null : status.trim();
     }
 
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime == null ? null : createTime.trim();
     }
 
-    public Date getUpdateTime() {
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime == null ? null : updateTime.trim();
     }
 
     public Date getLastLoginTime() {
@@ -124,21 +146,11 @@ public class User extends UserKey implements Serializable{
         this.partName = partName == null ? null : partName.trim();
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", salt='" + salt + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", sex=" + sex +
-                ", age=" + age +
-                ", status=" + status +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
-                ", lastLoginTime=" + lastLoginTime +
-                ", partName='" + partName + '\'' +
-                '}';
+    public String getLastUpdateUser() {
+        return lastUpdateUser;
+    }
+
+    public void setLastUpdateUser(String lastUpdateUser) {
+        this.lastUpdateUser = lastUpdateUser == null ? null : lastUpdateUser.trim();
     }
 }

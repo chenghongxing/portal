@@ -2,6 +2,7 @@ package com.cheng.controller;
 
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.cheng.login.domain.User;
 import com.cheng.login.service.IUserService;
 import com.cheng.redis.JedisClient;
@@ -59,7 +60,7 @@ public class LoginController {
         String verifyCode = request.getParameter("verifyCode");
         ModelAndView modelAndView = new ModelAndView();
         String code = (String) request.getSession().getAttribute("code");
-        if (!code.equals(verifyCode)){
+        if (!code.equalsIgnoreCase(verifyCode)){
             modelAndView.addObject("codeMsg","验证码错误");
             modelAndView.setViewName("login");
             return modelAndView;
@@ -75,6 +76,11 @@ public class LoginController {
             try {
                 currentUser.login(token);
                 modelAndView.setViewName("welcome");
+                User user = userService.selectUserByName(username);
+                String userJson = JSON.toJSONString(user);
+                String sessionId = request.getSession().getId();
+                jedisClient.hset(sessionId,"user",userJson);
+                jedisClient.expire(sessionId,1800);
                 return modelAndView;
             } catch (UnknownAccountException e) {
                 message=e.getMessage();
@@ -88,6 +94,8 @@ public class LoginController {
             return modelAndView;
         }else {
             modelAndView.setViewName("welcome");
+            User user = userService.selectUserByName(username);
+            request.getSession().setAttribute("user",user);
             return modelAndView;
         }
     }
@@ -111,12 +119,6 @@ public class LoginController {
     public ModelAndView doSendMsg(@PathVariable("phoneNo") String to, HttpServletRequest request){
         ModelAndView modelAndView = new ModelAndView();
         if (jedisClient.exists(to)){
-            if ("4".equals(jedisClient.get(to))){
-                modelAndView.addObject("sendMsg","请勿重复发送，5分钟后才能发送");
-                modelAndView.setViewName("login");
-                jedisClient.expire(to,300);
-                return modelAndView;
-            }
             if (Integer.parseInt(jedisClient.get(to))-4>0){
                 modelAndView.addObject("sendMsg","请勿重复发送，5分钟后才能发送");
                 modelAndView.setViewName("login");
@@ -152,7 +154,9 @@ public class LoginController {
             int i =0;
             i++;
             jedisClient.set(to,String.valueOf(i));
-            jedisClient.expire(to,300);
+            if("1".equals(jedisClient.get(to))){
+                jedisClient.expire(to,300);
+            }
             return null;
         } catch (Exception e) {
             logger.error("调用秒滴科技发送短信验证码异常----"+e.getMessage());
@@ -186,6 +190,10 @@ public class LoginController {
             return modelAndView;
         }else {
             modelAndView.setViewName("welcome");
+            String userJson = JSON.toJSONString(user);
+            jedisClient.hset(sessionId,"user",userJson);
+            jedisClient.expire(sessionId,1800);
+            jedisClient.hdel(sessionId,"msgCode");
             return modelAndView;
         }
     }

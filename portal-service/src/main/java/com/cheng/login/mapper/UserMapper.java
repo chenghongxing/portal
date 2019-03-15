@@ -1,23 +1,25 @@
 package com.cheng.login.mapper;
 
-
 import com.cheng.login.domain.User;
-import com.cheng.login.domain.UserKey;
+
+import java.util.Map;
 
 public interface UserMapper {
-    int deleteByPrimaryKey(UserKey key);
+    int deleteByPrimaryKey(Integer id);
 
     int insert(User record);
 
     int insertSelective(User record);
 
-    User selectByPrimaryKey(UserKey key);
-
-    User selectByUsername(String username);
+    User selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
 
-     User selectByPhoneNo(String phoneNo);
+    User selectByPhoneNo(String phoneNo);
+
+    User selectByUsername(String username);
+
+    int updatePassword(Map para);
 }

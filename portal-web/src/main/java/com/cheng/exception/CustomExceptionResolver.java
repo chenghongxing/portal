@@ -21,7 +21,6 @@ public class CustomExceptionResolver implements HandlerExceptionResolver {
     @Override
     public ModelAndView resolveException(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) {
         CustomException customException = null;
-        e.printStackTrace();
         String message = "";
         if (e instanceof CustomException){
             customException = (CustomException)e;
@@ -30,7 +29,8 @@ public class CustomExceptionResolver implements HandlerExceptionResolver {
             customException = new CustomException("999999","系统未知错误");
             message=customException.getMessage();
         }
-        logger.error(message+"---异常信息----"+e.getMessage());
+        logger.error(message+"---》");
+        logger.error(e.getMessage());
         View view = new FreeMarkerView();
         ModelAndView modelAndView = new ModelAndView(view);
         modelAndView.addObject("message",message);

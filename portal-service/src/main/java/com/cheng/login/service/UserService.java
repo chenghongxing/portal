@@ -1,12 +1,14 @@
 package com.cheng.login.service;
 
-import com.cheng.login.domain.User;
 import com.cheng.exception.CustomException;
+import com.cheng.login.domain.User;
 import com.cheng.login.mapper.UserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 /**
  * @ClassName(类名) ：
@@ -43,6 +45,32 @@ public class UserService implements IUserService {
             logger.error("手机号查用户异常---"+e.getMessage());
         }
         return user;
+    }
+
+    @Override
+    public boolean addUser(User user) throws CustomException {
+        boolean flag = false;
+        int i = userMapper.insertSelective(user);
+        logger.info("添加用户-----"+user.getUsername());
+        if (i==1){
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public int updatePwd(Map para) throws CustomException {
+        return userMapper.updatePassword(para);
+    }
+
+    @Override
+    public int updatePhone(User user) throws CustomException {
+        return userMapper.updateByPrimaryKeySelective(user);
+    }
+
+    @Override
+    public int updateEmail(User user) throws CustomException {
+        return userMapper.updateByPrimaryKeySelective(user);
     }
 
 }

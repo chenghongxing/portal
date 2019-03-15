@@ -1,7 +1,9 @@
 package com.cheng.login.service;
 
-import com.cheng.login.domain.User;
 import com.cheng.exception.CustomException;
+import com.cheng.login.domain.User;
+
+import java.util.Map;
 
 
 /**
@@ -14,4 +16,12 @@ public interface IUserService {
     User selectUserByName(String userName) throws CustomException;
 
     User selectUserByPhoneNo(String phoneNo) throws CustomException;
+
+    boolean addUser(User user) throws CustomException;
+
+    int updatePwd(Map para) throws CustomException;
+
+    int updatePhone(User user) throws CustomException;
+
+    int updateEmail(User user) throws CustomException;
 }
