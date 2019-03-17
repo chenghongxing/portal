@@ -274,7 +274,7 @@
     <div id="centerSon">
         <div class="tp1">
             <hr />
-            <p>欢迎登录帮作业系统</p>
+            <p>欢迎登录考勤系统</p>
             <hr />
         </div>
         <div class="tp2">
@@ -382,20 +382,6 @@
         $par=document.getElementById(n);
         $par.src="/portal-web/verifyCode?aa="+new Date().getTime();
     }
-//    function sendCode(){
-//        var i=30;
-//        var time=document.getElementById("phone_send");
-//        var jishi=setInterval(function(){
-//            time.style.backgroundColor="gray";
-//            time.value=i+"秒后重新发送";
-//            i--;
-//            if(i==-1){
-//                clearInterval(jishi);
-//                time.style.backgroundColor="blue";
-//                time.value="重新发送";
-//            }
-//        },1000);
-//    }
 </script>
 </html>
 

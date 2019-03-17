@@ -6,7 +6,7 @@
     <script src="/portal-web/js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
-系统发生异常
+${message!''}
 </body>
 </html>
 
