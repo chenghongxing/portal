@@ -29,6 +29,7 @@ public class CustomExceptionResolver implements HandlerExceptionResolver {
             customException = new CustomException("999999","系统未知错误");
             message=customException.getMessage();
         }
+        e.printStackTrace();
         logger.error(message+"---》");
         logger.error(e.getMessage());
         View view = new FreeMarkerView();

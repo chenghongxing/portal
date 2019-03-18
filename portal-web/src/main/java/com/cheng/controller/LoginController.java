@@ -28,6 +28,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.Random;
 
@@ -76,11 +78,22 @@ public class LoginController {
             try {
                 currentUser.login(token);
                 modelAndView.setViewName("welcome");
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date curentDate = new Date();
+                String date = format.format(curentDate);
+                User user1 = new User();
+                user1.setLastLoginTime(date);
+                userService.updateUserByUser(user1);
                 User user = userService.selectUserByName(username);
                 String userJson = JSON.toJSONString(user);
                 String sessionId = request.getSession().getId();
                 jedisClient.hset(sessionId,"user",userJson);
                 jedisClient.expire(sessionId,1800);
+                String time = date.substring(11,16);
+                String ta = time.substring(0,2);
+                time = time + (Integer.parseInt(ta)>12?"PM":"AM");
+                user.setLastLoginTime(time);
+                modelAndView.addObject("user",user);
                 return modelAndView;
             } catch (UnknownAccountException e) {
                 message=e.getMessage();
@@ -94,8 +107,22 @@ public class LoginController {
             return modelAndView;
         }else {
             modelAndView.setViewName("welcome");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date curentDate = new Date();
+            String date = format.format(curentDate);
+            User user1 = new User();
+            user1.setLastLoginTime(date);
+            userService.updateUserByUser(user1);
             User user = userService.selectUserByName(username);
-            request.getSession().setAttribute("user",user);
+            String userJson = JSON.toJSONString(user);
+            String sessionId = request.getSession().getId();
+            jedisClient.hset(sessionId,"user",userJson);
+            jedisClient.expire(sessionId,1800);
+            String time = date.substring(11,16);
+            String ta = time.substring(0,2);
+            time = time + (Integer.parseInt(ta)>12?"PM":"AM");
+            user.setLastLoginTime(time);
+            modelAndView.addObject("user",user);
             return modelAndView;
         }
     }
@@ -190,10 +217,17 @@ public class LoginController {
             return modelAndView;
         }else {
             modelAndView.setViewName("welcome");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date curentDate = new Date();
+            String date = format.format(curentDate);
+            User user1 = new User();
+            user1.setLastLoginTime(date);
+            userService.updateUserByUser(user);
             String userJson = JSON.toJSONString(user);
             jedisClient.hset(sessionId,"user",userJson);
             jedisClient.expire(sessionId,1800);
             jedisClient.hdel(sessionId,"msgCode");
+            modelAndView.addObject("user",user);
             return modelAndView;
         }
     }

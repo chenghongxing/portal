@@ -5,7 +5,7 @@
     <!-- 页面meta -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>运营商后台管理系统</title>
+    <title>portal考勤管理系统</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
 
@@ -83,7 +83,7 @@
                                     <li>
                                         <a href="#">
                                             <div class="pull-left">
-                                                <img src="/portal-web/img/user3-128x128.jpg" class="img-circle" alt="User Image">
+                                                <img src="/portal-web/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                                             </div>
                                             <h4>
                                                 团队消息
@@ -104,7 +104,7 @@
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <img src="/portal-web/img/user2-160x160.jpg" class="user-image" alt="User Image">
-                            <span class="hidden-xs">测试用户</span>
+                            <span class="hidden-xs">${user.username}</span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
@@ -112,8 +112,8 @@
                                 <img src="/portal-web/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                                 <p>
-                                    测试用户
-                                    <small>最后登录 11:20AM</small>
+                                    ${user.username}
+                                    <small>最后登录 ${user.lastLoginTime}</small>
                                 </p>
                             </li>
 
@@ -145,7 +145,7 @@
                     <img src="/portal-web/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                 </div>
                 <div class="pull-left info">
-                    <p> 测试用户</p>
+                    <p> ${user.username}</p>
                     <a href="#"><i class="fa fa-circle text-success"></i> 在线</a>
                 </div>
             </div>

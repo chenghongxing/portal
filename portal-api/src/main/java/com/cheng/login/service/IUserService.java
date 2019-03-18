@@ -24,4 +24,6 @@ public interface IUserService {
     int updatePhone(User user) throws CustomException;
 
     int updateEmail(User user) throws CustomException;
+
+    int updateUserByUser(User user) throws CustomException;
 }

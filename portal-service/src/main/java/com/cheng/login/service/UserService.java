@@ -73,4 +73,9 @@ public class UserService implements IUserService {
         return userMapper.updateByPrimaryKeySelective(user);
     }
 
+    @Override
+    public int updateUserByUser(User user) throws CustomException {
+        return userMapper.updateByPrimaryKeySelective(user);
+    }
+
 }

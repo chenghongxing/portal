@@ -1,7 +1,15 @@
 package com.cheng.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import com.cheng.redis.JedisClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @ClassName(类名) ：
@@ -11,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 public class ViewController {
+    private static final Logger logger = LoggerFactory.getLogger(ViewController.class);
+    @Autowired
+    private JedisClient jedisClient;
 
     @RequestMapping("/login")
     public String toLoginPage(){
@@ -43,18 +54,39 @@ public class ViewController {
     }
 
     @RequestMapping("/relPwdPage")
-    public String toRelPwdPage(){
-        return "relpwd";
+    public ModelAndView toRelPwdPage(HttpServletRequest request){
+        String sessionId = request.getSession().getId();
+        String userJosn = jedisClient.hget(sessionId,"user");
+        JSONObject jsonObject = JSONObject.parseObject(userJosn);
+        String oldEmail = jsonObject.get("email").toString();
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("relpwd");
+        modelAndView.addObject("oldEmail",oldEmail);
+        return modelAndView;
     }
 
     @RequestMapping("/relPhonePage")
-    public String toRelPhonePage(){
-        return "relphone";
+    public ModelAndView toRelPhonePage(HttpServletRequest request){
+        String sessionId = request.getSession().getId();
+        String userJosn = jedisClient.hget(sessionId,"user");
+        JSONObject jsonObject = JSONObject.parseObject(userJosn);
+        String phone = jsonObject.get("phone").toString();
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("phone",phone);
+        modelAndView.setViewName("relphone");
+        return modelAndView;
     }
 
     @RequestMapping("/relEmailPage")
-    public String toRelEmailPage(){
-        return "relemail";
+    public ModelAndView toRelEmailPage(HttpServletRequest request){
+        String sessionId = request.getSession().getId();
+        String userJosn = jedisClient.hget(sessionId,"user");
+        JSONObject jsonObject = JSONObject.parseObject(userJosn);
+        String oldEmail = jsonObject.get("email").toString();
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("relemail");
+        modelAndView.addObject("oldEmail",oldEmail);
+        return modelAndView;
     }
 
     @RequestMapping("/noticePage")

@@ -28,7 +28,7 @@ public class User implements Serializable{
 
     private String updateTime;
 
-    private Date lastLoginTime;
+    private String lastLoginTime;
 
     private String partName;
 
@@ -130,11 +130,11 @@ public class User implements Serializable{
         this.updateTime = updateTime == null ? null : updateTime.trim();
     }
 
-    public Date getLastLoginTime() {
+    public String getLastLoginTime() {
         return lastLoginTime;
     }
 
-    public void setLastLoginTime(Date lastLoginTime) {
+    public void setLastLoginTime(String lastLoginTime) {
         this.lastLoginTime = lastLoginTime;
     }
 
