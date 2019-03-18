@@ -225,5 +225,8 @@
     SET password=#{newPwd,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER} and password=#{oldPwd,jdbcType=VARCHAR}
   </update>
+  <select id="getMaxUserNo" resultType="integer">
+    SELECT MAX (user_no) FROM `user`
+  </select>
 </mapper>
 
