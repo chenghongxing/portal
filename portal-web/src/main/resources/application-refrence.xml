@@ -15,5 +15,7 @@
     <dubbo:reference interface="com.cheng.test.service.ITestService" id="testService" timeout="30000"/>
     <dubbo:reference interface="com.cheng.login.service.IUserService" id="userService" timeout="30000"/>
     <dubbo:reference interface="com.cheng.redis.JedisClient" id="jedisClient" timeout="30000"/>
+    <dubbo:reference interface="com.cheng.base.service.ISignRecordService" id="signRecordService" timeout="30000"/>
+    <dubbo:reference interface="com.cheng.base.service.IDeptService" id="deptService" timeout="30000"/>
 </beans>
 

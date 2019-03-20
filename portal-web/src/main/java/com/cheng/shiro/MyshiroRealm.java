@@ -44,10 +44,4 @@ public class MyshiroRealm extends AuthenticatingRealm {
         SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(username,password,credentialsSalt,realmName);
         return info;
     }
-
-    public static void main(String[] args) {
-        ByteSource byteSource = ByteSource.Util.bytes("201501450300");
-        Object obj = new SimpleHash("MD5","123456",byteSource,1024);
-        System.out.println(obj);
-    }
 }

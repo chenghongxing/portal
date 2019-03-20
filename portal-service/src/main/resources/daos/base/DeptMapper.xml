@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cheng.base.mapper.DeptMapper" >
+  <resultMap id="BaseResultMap" type="com.cheng.base.domain.Dept" >
+    <id column="dept_id" property="deptId" jdbcType="INTEGER" />
+    <result column="dept_no" property="deptNo" jdbcType="CHAR" />
+    <result column="dept_name" property="deptName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="dept_boss" property="deptBoss" jdbcType="CHAR" />
+    <result column="userCount" property="userCount" jdbcType="VARCHAR"/>
+    <result column="bossName" property="bossName" jdbcType="VARCHAR"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    dept_id, dept_no, dept_name, create_time, update_time, create_user, dept_boss
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from dept
+    where dept_id = #{deptId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from dept
+    where dept_id = #{deptId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.cheng.base.domain.Dept" >
+    insert into dept (dept_id, dept_no, dept_name,
+    create_time, update_time, create_user,
+    dept_boss)
+    values (#{deptId,jdbcType=INTEGER}, #{deptNo,jdbcType=CHAR}, #{deptName,jdbcType=VARCHAR},
+    #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+    #{deptBoss,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cheng.base.domain.Dept" >
+    insert into dept
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="deptId != null" >
+        dept_id,
+      </if>
+      <if test="deptNo != null" >
+        dept_no,
+      </if>
+      <if test="deptName != null" >
+        dept_name,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="deptBoss != null" >
+        dept_boss,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="deptId != null" >
+        #{deptId,jdbcType=INTEGER},
+      </if>
+      <if test="deptNo != null" >
+        #{deptNo,jdbcType=CHAR},
+      </if>
+      <if test="deptName != null" >
+        #{deptName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="deptBoss != null" >
+        #{deptBoss,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cheng.base.domain.Dept" >
+    update dept
+    <set >
+      <if test="deptNo != null" >
+        dept_no = #{deptNo,jdbcType=CHAR},
+      </if>
+      <if test="deptName != null" >
+        dept_name = #{deptName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="deptBoss != null" >
+        dept_boss = #{deptBoss,jdbcType=CHAR},
+      </if>
+    </set>
+    where dept_id = #{deptId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cheng.base.domain.Dept" >
+    update dept
+    set dept_no = #{deptNo,jdbcType=CHAR},
+    dept_name = #{deptName,jdbcType=VARCHAR},
+    create_time = #{createTime,jdbcType=VARCHAR},
+    update_time = #{updateTime,jdbcType=VARCHAR},
+    create_user = #{createUser,jdbcType=VARCHAR},
+    dept_boss = #{deptBoss,jdbcType=CHAR}
+    where dept_id = #{deptId,jdbcType=INTEGER}
+  </update>
+  <select id="selectAllDept" resultMap="BaseResultMap">
+    SELECT
+    aw.dept_id, aw.dept_no, aw.dept_name, aw.create_time, aw.update_time, aw.create_user, aq.username bossName,
+IFNULL((select count(id) from `user` b where b.part_no=aw.dept_no GROUP BY b.part_no),0) userCount
+    FROM dept aw LEFT JOIN `user` aq
+    on aw.dept_boss = aq.user_no
+  </select>
+</mapper>
+

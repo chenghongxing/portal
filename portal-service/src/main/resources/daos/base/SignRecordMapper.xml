@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cheng.base.mapper.SignRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.cheng.base.domain.SignRecord" >
+    <id column="sre_id" property="sreId" jdbcType="INTEGER" />
+    <result column="sre_user" property="sreUser" jdbcType="CHAR" />
+    <result column="sign_time" property="signTime" jdbcType="VARCHAR" />
+    <result column="sgout_time" property="sgoutTime" jdbcType="VARCHAR" />
+    <result column="now_date" property="nowDate" jdbcType="VARCHAR" />
+    <result column="pc_ip" property="pcIp" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    sre_id, sre_user, sign_time, sgout_time, now_date, pc_ip
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sign_record
+    where sre_id = #{sreId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sign_record
+    where sre_id = #{sreId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.cheng.base.domain.SignRecord" >
+    insert into sign_record (sre_id, sre_user, sign_time, 
+      sgout_time, now_date, pc_ip
+      )
+    values (#{sreId,jdbcType=INTEGER}, #{sreUser,jdbcType=CHAR}, #{signTime,jdbcType=VARCHAR}, 
+      #{sgoutTime,jdbcType=VARCHAR}, #{nowDate,jdbcType=VARCHAR}, #{pcIp,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cheng.base.domain.SignRecord" >
+    insert into sign_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sreId != null" >
+        sre_id,
+      </if>
+      <if test="sreUser != null" >
+        sre_user,
+      </if>
+      <if test="signTime != null" >
+        sign_time,
+      </if>
+      <if test="sgoutTime != null" >
+        sgout_time,
+      </if>
+      <if test="nowDate != null" >
+        now_date,
+      </if>
+      <if test="pcIp != null" >
+        pc_ip,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sreId != null" >
+        #{sreId,jdbcType=INTEGER},
+      </if>
+      <if test="sreUser != null" >
+        #{sreUser,jdbcType=CHAR},
+      </if>
+      <if test="signTime != null" >
+        #{signTime,jdbcType=VARCHAR},
+      </if>
+      <if test="sgoutTime != null" >
+        #{sgoutTime,jdbcType=VARCHAR},
+      </if>
+      <if test="nowDate != null" >
+        #{nowDate,jdbcType=VARCHAR},
+      </if>
+      <if test="pcIp != null" >
+        #{pcIp,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cheng.base.domain.SignRecord" >
+    update sign_record
+    <set >
+      <if test="sreUser != null" >
+        sre_user = #{sreUser,jdbcType=CHAR},
+      </if>
+      <if test="signTime != null" >
+        sign_time = #{signTime,jdbcType=VARCHAR},
+      </if>
+      <if test="sgoutTime != null" >
+        sgout_time = #{sgoutTime,jdbcType=VARCHAR},
+      </if>
+      <if test="nowDate != null" >
+        now_date = #{nowDate,jdbcType=VARCHAR},
+      </if>
+      <if test="pcIp != null" >
+        pc_ip = #{pcIp,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where sre_id = #{sreId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cheng.base.domain.SignRecord" >
+    update sign_record
+    set sre_user = #{sreUser,jdbcType=CHAR},
+      sign_time = #{signTime,jdbcType=VARCHAR},
+      sgout_time = #{sgoutTime,jdbcType=VARCHAR},
+      now_date = #{nowDate,jdbcType=VARCHAR},
+      pc_ip = #{pcIp,jdbcType=VARCHAR}
+    where sre_id = #{sreId,jdbcType=INTEGER}
+  </update>
+  <select id="selectSignInfo" parameterType="map" resultType="map">
+    select
+	a.user_no,a.username,c.sign_time,c.sgout_time,c.now_date,b.dept_name
+from `user` a,dept b,sign_record c
+ WHERE a.user_no=c.sre_user
+ and a.part_no=b.dept_no
+     <if test="deptNo != null">
+       AND a.part_no=#{deptNo,jdbcType=VARCHAR}
+     </if>
+    <if test="nowDate != null">
+      and c.now_date=#{nowDate,jdbcType=VARCHAR}
+    </if>
+    <if test="userNo != null">
+      and a.user_no=#{userNo,jdbcType=VARCHAR}
+    </if>
+    <if test="userName != null">
+      and a.username like concat(concat('%',#{userName,jdbcType=VARCHAR}),'%')
+    </if>
+  </select>
+</mapper>
+

@@ -30,7 +30,7 @@ public class User implements Serializable{
 
     private String lastLoginTime;
 
-    private String partName;
+    private String partNo;
 
     private String lastUpdateUser;
 
@@ -139,11 +139,11 @@ public class User implements Serializable{
     }
 
     public String getPartName() {
-        return partName;
+        return partNo;
     }
 
-    public void setPartName(String partName) {
-        this.partName = partName == null ? null : partName.trim();
+    public void setPartName(String partNo) {
+        this.partNo = partNo == null ? null : partNo.trim();
     }
 
     public String getLastUpdateUser() {

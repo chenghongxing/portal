@@ -199,7 +199,7 @@
 				var newPwd = document.getElementById("newPwd").value;
 				var relPwd = document.getElementById("relPwd").value;
 				if (relPwd != newPwd){
-				    $("#mgPwd").val("前后密码不一致！");
+				    $("#mgPwd").html("前后密码不一致！");
 				    return false;
 				}else {
 				    return true;
@@ -210,7 +210,7 @@
                 var newPwd = document.getElementById("newPwd2").value;
                 var relPwd = document.getElementById("relPwd2").value;
                 if (relPwd != newPwd){
-                    $("#mgPwd").val("前后密码不一致！");
+                    $("#mgPwd").html("前后密码不一致！");
                     return false;
                 }else {
                     return true;

@@ -230,6 +230,11 @@
                             </a>
                         </li>
                         <li id="admin-login">
+                            <a href="/portal-web/signInfoPage" target="iframe">
+                                <i class="fa fa-circle-o"></i>部门管理
+                            </a>
+                        </li>
+                        <li id="admin-login">
                             <a href="/portal-web/noticePage" target="iframe">
                                 <i class="fa fa-circle-o"></i>公告管理
                             </a>
@@ -252,7 +257,7 @@
     <!-- 内容区域 -->
     <div class="content-wrapper">
         <iframe width="100%" id="iframe" name="iframe"	onload="SetIFrameHeight()"
-                frameborder="0" src="home.html"></iframe>
+                frameborder="0" src="/portal-web/home"></iframe>
 
     </div>
     <!-- 内容区域 /-->

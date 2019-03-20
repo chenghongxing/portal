@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="/portal-web/css/style.css">
 	<script src="/portal-web/plugins/jQuery/jquery-2.2.3.min.js"></script>
     <script src="/portal-web/plugins/bootstrap/js/bootstrap.min.js"></script>
- 
+    <script src="/portal-web/plugins/My97DatePicker/WdatePicker.js"></script>
 </head>
 
 <body class="hold-transition skin-red sidebar-mini" >
@@ -33,7 +33,7 @@
                             <div class="pull-left">
                                 <div class="form-group form-inline">
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-default" title="新增" ><i class="fa fa-file-o"></i> 新增</button>
+                                        <button type="button" class="btn btn-default" title="新增" data-toggle="modal" data-target="#editModal" ><i class="fa fa-file-o"></i> 新增</button>
                                         <button type="button" class="btn btn-default" title="删除" ><i class="fa fa-trash-o"></i> 删除</button>
                                         
                                         <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
@@ -107,7 +107,73 @@
                         
                      </div>
                     <!-- /.box-body -->
+  <!-- 编辑窗口 -->
+  <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog" >
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                  <h3 id="myModalLabel">员工编辑</h3>
+              </div>
+              <div class="modal-body">
+                  <table class="table table-bordered table-striped"  width="800px">
+                      <tr>
+                          <td>工号</td>
+                          <td>20150311  </td>
+                      </tr>
+                      <tr>
+                          <td>姓名</td>
+                          <td><input  class="form-control" placeholder="姓名" >  </td>
+                      </tr>
+                      <tr>
+                          <td>部门</td>
+                          <td><input  class="form-control" placeholder="部门">  </td>
+                      </tr>
+                      <tr>
+                          <td>手机号</td>
+                          <td><input  class="form-control" placeholder="手机号">  </td>
+                      </tr>
+                      <tr>
+                          <td>邮箱</td>
+                          <td><input  class="form-control" placeholder="邮箱">  </td>
+                      </tr>
+                      <tr>
+                          <td>入职时间</td>
+                          <td><input  class="form-control" placeholder="入职时间" onclick="createTime()">  </td>
+                      </tr>
+                      <tr>
+                          <td>状态</td>
+                          <td>
+                              正常<input type="radio" name="status" checked style="margin: 0px 5px;">
+                              离职<input type="radio" name="status" style="margin: 0px 5px;">
+                          </td>
+                      </tr>
+                  </table>
+              </div>
+              <div class="modal-footer">
+                  <button class="btn btn-success" data-dismiss="modal" aria-hidden="true">保存</button>
+                  <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</button>
+              </div>
+          </div>
+      </div>
+  </div>
 		
 </body>
-
+<script language="javascript">
+    function getdate() {
+        var date = new Date();
+        var mon = date.getMonth()  + 1;         //getMonth()返回的是0-11，则需要加1
+        if(mon <=9){                                     //如果小于9的话，则需要加上0
+            mon = "0" + mon;
+        }
+        var day = date.getDate();                   //getdate()返回的是1-31，则不需要加1
+        if(day <=9){                                     //如果小于9的话，则需要加上0
+            day = "0" + day;
+        }
+        return date.getFullYear() + "-" + mon + "-" +  day;
+    }
+    function createTime(){
+        WdatePicker({dateFmt:'yyyy-MM-dd',minDate:'2015-10-01',maxDate:getdate()});
+    }
+</script>
 </html>

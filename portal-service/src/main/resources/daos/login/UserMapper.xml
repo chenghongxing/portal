@@ -15,12 +15,12 @@
     <result column="create_time" property="createTime" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
     <result column="last_login_time" property="lastLoginTime" jdbcType="VARCHAR" />
-    <result column="part_name" property="partName" jdbcType="VARCHAR" />
+    <result column="part_no" property="partNo" jdbcType="VARCHAR" />
     <result column="last_update_user" property="lastUpdateUser" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, user_no, username, password, salt, email, phone, sex, age, status, create_time, 
-    update_time, last_login_time, part_name, last_update_user
+    update_time, last_login_time, part_no, last_update_user
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -37,12 +37,12 @@
       password, salt, email, 
       phone, sex, age, status, 
       create_time, update_time, last_login_time, 
-      part_name, last_update_user)
+      part_no, last_update_user)
     values (#{id,jdbcType=INTEGER}, #{userNo,jdbcType=CHAR}, #{username,jdbcType=VARCHAR}, 
       #{password,jdbcType=VARCHAR}, #{salt,jdbcType=CHAR}, #{email,jdbcType=VARCHAR}, 
       #{phone,jdbcType=CHAR}, #{sex,jdbcType=CHAR}, #{age,jdbcType=INTEGER}, #{status,jdbcType=CHAR}, 
       #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR}, #{lastLoginTime,jdbcType=VARCHAR},
-      #{partName,jdbcType=VARCHAR}, #{lastUpdateUser,jdbcType=VARCHAR})
+      #{partNo,jdbcType=VARCHAR}, #{lastUpdateUser,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.cheng.login.domain.User" >
     insert into user
@@ -86,8 +86,8 @@
       <if test="lastLoginTime != null" >
         last_login_time,
       </if>
-      <if test="partName != null" >
-        part_name,
+      <if test="partNo != null" >
+        part_no,
       </if>
       <if test="lastUpdateUser != null" >
         last_update_user,
@@ -133,8 +133,8 @@
       <if test="lastLoginTime != null" >
         #{lastLoginTime,jdbcType=VARCHAR},
       </if>
-      <if test="partName != null" >
-        #{partName,jdbcType=VARCHAR},
+      <if test="partNo != null" >
+        #{partNo,jdbcType=VARCHAR},
       </if>
       <if test="lastUpdateUser != null" >
         #{lastUpdateUser,jdbcType=VARCHAR},
@@ -180,8 +180,8 @@
       <if test="lastLoginTime != null" >
         last_login_time = #{lastLoginTime,jdbcType=VARCHAR},
       </if>
-      <if test="partName != null" >
-        part_name = #{partName,jdbcType=VARCHAR},
+      <if test="partNo != null" >
+        part_no = #{partNo,jdbcType=VARCHAR},
       </if>
       <if test="lastUpdateUser != null" >
         last_update_user = #{lastUpdateUser,jdbcType=VARCHAR},
@@ -203,7 +203,7 @@
       create_time = #{createTime,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=VARCHAR},
       last_login_time = #{lastLoginTime,jdbcType=VARCHAR},
-      part_name = #{partName,jdbcType=VARCHAR},
+      part_no = #{partNo,jdbcType=VARCHAR},
       last_update_user = #{lastUpdateUser,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>

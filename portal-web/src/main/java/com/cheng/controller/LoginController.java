@@ -8,6 +8,7 @@ import com.cheng.login.service.IUserService;
 import com.cheng.redis.JedisClient;
 import com.cheng.sendmsg.Config;
 import com.cheng.sendmsg.HttpUtil;
+import com.cheng.shiro.EasyTypeToken;
 import com.cheng.utils.VerifyCode;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -74,17 +75,19 @@ public class LoginController {
         String message="";
         Subject currentUser= SecurityUtils.getSubject();
         if (!currentUser.isAuthenticated()){
-            UsernamePasswordToken token = new UsernamePasswordToken(username,password);
+            EasyTypeToken token = new EasyTypeToken(username,password,flag);
             try {
                 currentUser.login(token);
                 modelAndView.setViewName("welcome");
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date curentDate = new Date();
                 String date = format.format(curentDate);
+                User user = userService.selectUserByName(username);
                 User user1 = new User();
+                user1.setId(user.getId());
                 user1.setLastLoginTime(date);
                 userService.updateUserByUser(user1);
-                User user = userService.selectUserByName(username);
+                user.setLastLoginTime(date);
                 String userJson = JSON.toJSONString(user);
                 String sessionId = request.getSession().getId();
                 jedisClient.hset(sessionId,"user",userJson);
@@ -110,10 +113,12 @@ public class LoginController {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date curentDate = new Date();
             String date = format.format(curentDate);
+            User user = userService.selectUserByName(username);
             User user1 = new User();
             user1.setLastLoginTime(date);
+            user1.setId(user.getId());
             userService.updateUserByUser(user1);
-            User user = userService.selectUserByName(username);
+            user.setLastLoginTime(date);
             String userJson = JSON.toJSONString(user);
             String sessionId = request.getSession().getId();
             jedisClient.hset(sessionId,"user",userJson);
@@ -216,19 +221,54 @@ public class LoginController {
             modelAndView.setViewName("login");
             return modelAndView;
         }else {
-            modelAndView.setViewName("welcome");
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date curentDate = new Date();
-            String date = format.format(curentDate);
-            User user1 = new User();
-            user1.setLastLoginTime(date);
-            userService.updateUserByUser(user);
-            String userJson = JSON.toJSONString(user);
-            jedisClient.hset(sessionId,"user",userJson);
-            jedisClient.expire(sessionId,1800);
-            jedisClient.hdel(sessionId,"msgCode");
-            modelAndView.addObject("user",user);
-            return modelAndView;
+            Subject currentUser= SecurityUtils.getSubject();
+            if (!currentUser.isAuthenticated()){
+                EasyTypeToken token = new EasyTypeToken(user.getUserNo(),false);
+                try {
+                    currentUser.login(token);
+                    modelAndView.setViewName("welcome");
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Date curentDate = new Date();
+                    String date = format.format(curentDate);
+                    User user1 = new User();
+                    user1.setId(user.getId());
+                    user1.setLastLoginTime(date);
+                    userService.updateUserByUser(user1);
+                    user.setLastLoginTime(date);
+                    String userJson = JSON.toJSONString(user);
+                    jedisClient.hset(sessionId,"user",userJson);
+                    jedisClient.expire(sessionId,1800);
+                    String time = date.substring(11,16);
+                    String ta = time.substring(0,2);
+                    time = time + (Integer.parseInt(ta)>12?"PM":"AM");
+                    user.setLastLoginTime(time);
+                    modelAndView.addObject("user",user);
+                    return modelAndView;
+                } catch (AuthenticationException ae){
+                    ae.printStackTrace();
+                    logger.error("shiro认证异常--》" + ae.getMessage());
+                }
+                return null;
+            }else {
+                modelAndView.setViewName("welcome");
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date curentDate = new Date();
+                String date = format.format(curentDate);
+                User user1 = new User();
+                user1.setLastLoginTime(date);
+                user1.setId(user.getId());
+                userService.updateUserByUser(user1);
+                user.setLastLoginTime(date);
+                String userJson = JSON.toJSONString(user);
+                jedisClient.hset(sessionId,"user",userJson);
+                jedisClient.expire(sessionId,1800);
+                String time = date.substring(11,16);
+                String ta = time.substring(0,2);
+                time = time + (Integer.parseInt(ta)>12?"PM":"AM");
+                user.setLastLoginTime(time);
+                modelAndView.addObject("user",user);
+                return modelAndView;
+            }
         }
     }
 }

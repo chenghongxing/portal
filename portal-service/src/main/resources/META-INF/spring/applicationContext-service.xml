@@ -17,5 +17,7 @@
     <dubbo:service interface="com.cheng.test.service.ITestService" ref="testServiceImpl" protocol="dubbo" timeout="30000"></dubbo:service>
     <dubbo:service interface="com.cheng.login.service.IUserService" ref="userService" protocol="dubbo" timeout="30000"/>
     <dubbo:service interface="com.cheng.redis.JedisClient" ref="jedisClientPool" protocol="dubbo" timeout="30000"/>
+    <dubbo:service interface="com.cheng.base.service.ISignRecordService" ref="signRecordService" protocol="dubbo" timeout="30000"/>
+    <dubbo:service interface="com.cheng.base.service.IDeptService" ref="deptService" protocol="dubbo" timeout="30000"/>
 </beans>
 

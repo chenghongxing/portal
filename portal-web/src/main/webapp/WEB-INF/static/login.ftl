@@ -314,7 +314,7 @@
                 <div class="tpj">
                     <p class="p1" id="notice2"></p>
                     <input type="text" id="phone" name="phoneNo" class="phone"  placeholder="手机号" onblur="check2()" required/>
-                    <p class="p2" >${sendMsg!''}</p>
+                    <p class="p2" id="sendMsg"></p>
                     <input type="text" name="msgCode" class="code"  placeholder="请输入短信验证码" required/>
                     <input type="button" id="phone_send"  value="获取验证码" />
                 </div>
@@ -327,6 +327,14 @@
 </div>
 </body>
 <script type="text/javascript">
+    var sendMsg = "${sendMsg!''}";
+    if(sendMsg != ''){
+        $("#select2").slideDown();
+        $("#adm").addClass("sty");
+        $("#stu").removeClass("sty");
+        $("#select1").css("display","none");
+        $("#sendMsg").html(sendMsg);
+    }
     $("#phone_send").click(function () {
         var phoneNo=$("#phone").val();
         $.ajax({
