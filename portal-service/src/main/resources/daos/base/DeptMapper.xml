@@ -116,12 +116,29 @@
     dept_boss = #{deptBoss,jdbcType=CHAR}
     where dept_id = #{deptId,jdbcType=INTEGER}
   </update>
-  <select id="selectAllDept" resultMap="BaseResultMap">
+  <select id="selectAllDept" resultMap="BaseResultMap" parameterType="map">
     SELECT
     aw.dept_id, aw.dept_no, aw.dept_name, aw.create_time, aw.update_time, aw.create_user, aq.username bossName,
 IFNULL((select count(id) from `user` b where b.part_no=aw.dept_no GROUP BY b.part_no),0) userCount
     FROM dept aw LEFT JOIN `user` aq
     on aw.dept_boss = aq.user_no
+    WHERE 1=1
+    <if test="deptNo != null">
+      AND aw.dept_no=#{deptNo,jdbcType=VARCHAR}
+    </if>
+    <if test="deptName != null">
+      and aw.dept_name like concat(concat('%',#{deptName,jdbcType=VARCHAR}),'%')
+    </if>
   </select>
+  <select id="getMaxDeptNo" resultType="map">
+    select max(dept_no)+1 maxDeptNo FROM dept
+  </select>
+  <delete id="deleteDeptByIds">
+    DELETE FROM dept
+    WHERE dept_id IN 
+    <foreach collection="array" index="index" item="deptId" open="(" separator="," close=")">
+      #{deptId,jdbcType=INTEGER}
+    </foreach>
+  </delete>
 </mapper>
 

@@ -33,7 +33,7 @@
                             <div class="pull-left">
                                 <div class="form-group form-inline">
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-default" title="新增" data-toggle="modal" data-target="#editModal" ><i class="fa fa-file-o"></i> 新增</button>
+                                        <button type="button" class="btn btn-default" title="新增" data-toggle="modal" data-target="#editModal" onclick="addUser()"><i class="fa fa-file-o"></i> 新增</button>
                                         <button type="button" class="btn btn-default" title="删除" ><i class="fa fa-trash-o"></i> 删除</button>
                                         
                                         <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
@@ -42,16 +42,17 @@
                             </div>
                             <div class="box-tools pull-right">
                                 <div class="has-feedback">
-                                  部门：<select>
-                                         	<option value="">全部</option>      
-                                         	<option value="0">销售部</option>    
-                                         	<option value="1">财务部</option>    
-                                         	<option value="2">人事部</option>    
-                                         	<option value="3">市场部</option>                                     
+                                    <form action="/portal-web/userPage" method="post" id="queryUser">
+                                  部门：<select name="deptNo">
+                                         	<option value="">全部</option>
+                                    <#list deptList as ptlist>
+                                         	<option value="${ptlist.deptNo}">${ptlist.deptName}</option>
+                                    </#list>
                                         </select>
-							                  工号：<input >
-																姓名：<input >	
-									<button class="btn btn-default" >查询</button>                                    
+							                  工号：<input placeholder="工号" type="text" name="userNo">
+																姓名：<input placeholder="姓名" type="text" name="userName" >
+									<button class="btn btn-default" onclick="queryUser()">查询</button>
+                                    </form>
                                 </div>
                             </div>
                             <!--工具栏/-->
@@ -74,28 +75,34 @@
 			                          </tr>
 			                      </thead>
 			                      <tbody>
+                                  <#if userList?exists>
+                                  <#list userList as srlist>
 			                          <tr>
 			                              <td><input  type="checkbox"></td>			                              
 				                          
-									      <td>20150311</td>
-									      <td>张安</td>
-									      <td>销售部</td>
-												<td>17853668483</td>
-									      <td>17853668483@163.com</td>
-									      <td>2019-03-11</td>
+									      <td>${srlist.userNo}</td>
+									      <td>${srlist.username}</td>
+									      <td>${srlist.deptName}</td>
+												<td>${srlist.phone!''}</td>
+									      <td>${srlist.email!''}</td>
+									      <td>${srlist.createTime}</td>
 		                                  <td>
+                                              <#if srlist.status=='1'>
 		                                  	<span>
 		                                  		正常
 		                                  	</span>
+                                                  <#else >
 		                                  	<span >
 		                                  		离职
 		                                  	</span>
-		                            
+                                              </#if>
 		                                  </td>		                                  
 		                                  <td class="text-center">                                          
-		                                 	  <button type="button" class="btn bg-olive btn-xs">修改</button>                  
+		                                 	  <button type="button" class="btn bg-olive btn-xs" data-toggle="modal" data-target="#editModal2" onclick='updateUser("${srlist.id}")'>修改</button>
 		                                  </td>
 			                          </tr>
+                                  </#list>
+                                  </#if>
 			                      </tbody>
 			                  </table>
 			                  <!--数据列表/-->                        
@@ -113,39 +120,102 @@
           <div class="modal-content">
               <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                  <h3 id="myModalLabel">员工编辑</h3>
+                  <h3 id="myModalLabel">员工新增</h3>
+              </div>
+              <div class="modal-body">
+                  <form action="/portal-web/addUser" method="post" id="saveUser">
+                  <table class="table table-bordered table-striped"  width="800px">
+                      <tr>
+                          <td>工号</td>
+                          <td><input  class="form-control" name="userNo" id="userNo" readonly></td>
+                      </tr>
+                      <tr>
+                          <td>姓名<span style="color: red">*</span></td>
+                          <td><input  class="form-control" name="userName" placeholder="姓名" onblur="checkName()" required>  </td>
+                      </tr>
+                      <tr>
+                          <td>部门<span style="color: red">*</span></td>
+                          <td>
+                              <select name="deptNo">
+                              <#list deptList as ptlist>
+                                  <option value="${ptlist.deptNo}">${ptlist.deptName}</option>
+                              </#list>
+                              </select>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>性别<span style="color: red">*</span></td>
+                          <td>
+                              男<input type="radio" name="sex" value="1" checked style="margin: 0px 5px;">
+                              女<input type="radio" name="sex" value="0" style="margin: 0px 5px;">
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>手机号</td>
+                          <td><input  class="form-control" name="phone" placeholder="手机号">  </td>
+                      </tr>
+                      <tr>
+                          <td>邮箱</td>
+                          <td><input  class="form-control" name="email" placeholder="邮箱">  </td>
+                      </tr>
+                  </table>
+                  </form>
+              </div>
+              <div class="modal-footer">
+                  <button class="btn btn-success" data-dismiss="modal" aria-hidden="true" onclick="saveUser()">保存</button>
+                  <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</button>
+              </div>
+          </div>
+      </div>
+  </div>
+  <!-- 编辑窗口 -->
+  <div class="modal fade" id="editModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog" >
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                  <h3 id="myModalLabel">员工修改</h3>
               </div>
               <div class="modal-body">
                   <table class="table table-bordered table-striped"  width="800px">
                       <tr>
                           <td>工号</td>
-                          <td>20150311  </td>
+                          <td><input  class="form-control" id="iuserNo" name="userNo"  readonly></td>
                       </tr>
                       <tr>
                           <td>姓名</td>
-                          <td><input  class="form-control" placeholder="姓名" >  </td>
+                          <td><input  class="form-control" id="iuserName" name="userName" placeholder="姓名" required>  </td>
                       </tr>
                       <tr>
                           <td>部门</td>
-                          <td><input  class="form-control" placeholder="部门">  </td>
+                          <td>
+                              <select name="deptNo">
+                              <#list deptList as ptlist>
+                                  <option value="${ptlist.deptNo}" id="${ptlist.deptNo}">${ptlist.deptName}</option>
+                              </#list>
+                              </select>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>性别</td>
+                          <td>
+                              男<input type="radio" name="sex" value="1" id="man" checked style="margin: 0px 5px;">
+                              女<input type="radio" name="sex" value="0" id="wman" style="margin: 0px 5px;">
+                          </td>
                       </tr>
                       <tr>
                           <td>手机号</td>
-                          <td><input  class="form-control" placeholder="手机号">  </td>
+                          <td><input  class="form-control" id="iphone" name="phone" placeholder="手机号">  </td>
                       </tr>
                       <tr>
                           <td>邮箱</td>
-                          <td><input  class="form-control" placeholder="邮箱">  </td>
-                      </tr>
-                      <tr>
-                          <td>入职时间</td>
-                          <td><input  class="form-control" placeholder="入职时间" onclick="createTime()">  </td>
+                          <td><input  class="form-control" id="iemail" name="email" placeholder="邮箱">  </td>
                       </tr>
                       <tr>
                           <td>状态</td>
                           <td>
-                              正常<input type="radio" name="status" checked style="margin: 0px 5px;">
-                              离职<input type="radio" name="status" style="margin: 0px 5px;">
+                              正常<input type="radio" name="status" id="qwe" value="1" checked style="margin: 0px 5px;">
+                              离职<input type="radio" name="status" id="asd" value="0" style="margin: 0px 5px;">
                           </td>
                       </tr>
                   </table>
@@ -157,7 +227,6 @@
           </div>
       </div>
   </div>
-		
 </body>
 <script language="javascript">
     function getdate() {
@@ -175,5 +244,71 @@
     function createTime(){
         WdatePicker({dateFmt:'yyyy-MM-dd',minDate:'2015-10-01',maxDate:getdate()});
     }
+    function queryUser() {
+        $("#queryUser").submit();
+    }
+    function addUser() {
+        $.ajax({
+            type:"GET",
+            url:"/portal-web/getNewUserNo",
+            dataType:"json",
+            success:function (data) {
+                $("#userNo").val(data["newUserNo"]);
+            }
+        })
+    }
+    function saveUser() {
+        $("#saveUser").submit();
+    }
+    function updateUser(userId) {
+        $.ajax({
+            type:"GET",
+            url:"/portal-web/selectUserById",
+            contentType:"application/json;charset=utf-8",
+            data:{"userId":userId},
+            dataType:"json",
+            success:function (data) {
+                $("#iuserNo").val(data["userNo"]);
+                $("#iuserName").val(data["username"]);
+                document.getElementById(data["partNo"]).selected=true;
+                if (data["sex"]=="1"){
+                    $("#man").prop("checked",true);
+                }else {
+                    $("#wman").prop("checked",true);
+                }
+                $("#iphone").val(data["phone"]);
+                $("#iemail").val(data["email"]);
+                if (data["status"]=="1"){
+                    $("#qwe").prop("checked",true);
+                }else {
+                    $("#asd").prop("checked",true);
+                }
+            }
+        })
+    }
+    function checkName() {
+        $.ajax({
+            type:"GET",
+            url:"/portal-web/checkBossName",
+            contentType:"application/json;charset=utf-8",
+            data:{"bossName":$("#userName").val()},
+            dataType:"json",
+            success:function (data) {
+                if (data["flag"]=="true"){
+                    alert("该用户已存在，使用（姓名+员工编号）作为姓名");
+                    $("#userName").val("");
+                }
+            }
+        })
+    }
 </script>
 </html>
+
+
+
+
+
+
+
+
+

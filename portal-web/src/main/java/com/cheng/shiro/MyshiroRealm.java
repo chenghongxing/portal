@@ -29,7 +29,7 @@ public class MyshiroRealm extends AuthenticatingRealm {
         String username = userToken.getUsername();
         User user = null;
         try {
-            user = userService.selectUserByName(username);
+            user = userService.selectUserByNo(username);
             logger.info("查询用户信息-----username="+username);
         } catch (CustomException e) {
             logger.error("查询用户信息发生异常----"+e.getMessage());

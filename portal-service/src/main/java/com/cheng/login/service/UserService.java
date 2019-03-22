@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,11 +26,11 @@ public class UserService implements IUserService {
     UserMapper userMapper;
 
     @Override
-    public User selectUserByName(String userName) throws CustomException{
+    public User selectUserByNo(String userNo) throws CustomException{
         User user =null;
         try {
-           user = userMapper.selectByUsername(userName);
-            logger.info("查询用户信息----username="+userName+"----"+user);
+           user = userMapper.selectByUserNo(userNo);
+            logger.info("查询用户信息----username="+userNo+"----"+user);
         } catch (Exception e) {
             logger.error("查询用户异常----"+e.getMessage());
         }
@@ -76,6 +78,31 @@ public class UserService implements IUserService {
     @Override
     public int updateUserByUser(User user) throws CustomException {
         return userMapper.updateByPrimaryKeySelective(user);
+    }
+
+    @Override
+    public User selectUserByName(String username) throws CustomException {
+        return userMapper.selectUserByUsername(username);
+    }
+
+    @Override
+    public List<User> selectUserInfoList(Map para) throws CustomException {
+        return userMapper.selectUserInfoList(para);
+    }
+
+    @Override
+    public BigDecimal getMaxUserNoAdd() throws CustomException {
+        return userMapper.getMaxUserNo();
+    }
+
+    @Override
+    public int insertUser(User user) throws CustomException {
+        return userMapper.insertSelective(user);
+    }
+
+    @Override
+    public User selectUserById(Integer userId) throws CustomException {
+        return userMapper.selectByPrimaryKey(userId);
     }
 
 }

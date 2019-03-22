@@ -3,6 +3,8 @@ package com.cheng.login.service;
 import com.cheng.exception.CustomException;
 import com.cheng.login.domain.User;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 
@@ -13,7 +15,7 @@ import java.util.Map;
  * @data(开发日期) ： 2018/12/18 13:56
  */
 public interface IUserService {
-    User selectUserByName(String userName) throws CustomException;
+    User selectUserByNo(String userNo) throws CustomException;
 
     User selectUserByPhoneNo(String phoneNo) throws CustomException;
 
@@ -26,4 +28,14 @@ public interface IUserService {
     int updateEmail(User user) throws CustomException;
 
     int updateUserByUser(User user) throws CustomException;
+
+    User selectUserByName(String username) throws CustomException;
+
+    List<User> selectUserInfoList(Map para) throws CustomException;
+
+    BigDecimal getMaxUserNoAdd() throws  CustomException;
+
+    int insertUser(User user) throws  CustomException;
+
+    User selectUserById(Integer userId) throws CustomException;
 }

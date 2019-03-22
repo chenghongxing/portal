@@ -2,6 +2,8 @@ package com.cheng.login.mapper;
 
 import com.cheng.login.domain.User;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 public interface UserMapper {
@@ -19,9 +21,13 @@ public interface UserMapper {
 
     User selectByPhoneNo(String phoneNo);
 
-    User selectByUsername(String username);
+    User selectByUserNo(String userNo);
 
     int updatePassword(Map para);
 
-    Integer getMaxUserNo();
+    BigDecimal getMaxUserNo();
+
+    User selectUserByUsername(String username);
+
+    List<User> selectUserInfoList(Map para);
 }

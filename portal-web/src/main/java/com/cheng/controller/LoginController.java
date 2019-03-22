@@ -82,7 +82,7 @@ public class LoginController {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date curentDate = new Date();
                 String date = format.format(curentDate);
-                User user = userService.selectUserByName(username);
+                User user = userService.selectUserByNo(username);
                 User user1 = new User();
                 user1.setId(user.getId());
                 user1.setLastLoginTime(date);
@@ -113,7 +113,7 @@ public class LoginController {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date curentDate = new Date();
             String date = format.format(curentDate);
-            User user = userService.selectUserByName(username);
+            User user = userService.selectUserByNo(username);
             User user1 = new User();
             user1.setLastLoginTime(date);
             user1.setId(user.getId());

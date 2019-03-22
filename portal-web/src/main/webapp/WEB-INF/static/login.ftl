@@ -370,7 +370,7 @@
     })
     function check1() {
         $username = document.getElementById("username").value;
-        var reg = /^[0-9]{12}$/;
+        var reg = /^[0-9]{8}$/;
         if ($username != "" && !reg.test($username)) {
             document.getElementById("notice1").innerHTML = "工号格式不正确！";
         } else {

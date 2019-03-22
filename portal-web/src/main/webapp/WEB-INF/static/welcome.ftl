@@ -230,7 +230,7 @@
                             </a>
                         </li>
                         <li id="admin-login">
-                            <a href="/portal-web/signInfoPage" target="iframe">
+                            <a href="/portal-web/deptPage" target="iframe">
                                 <i class="fa fa-circle-o"></i>部门管理
                             </a>
                         </li>

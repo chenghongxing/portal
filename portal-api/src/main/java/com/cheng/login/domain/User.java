@@ -34,6 +34,24 @@ public class User implements Serializable{
 
     private String lastUpdateUser;
 
+    public String getPartNo() {
+        return partNo;
+    }
+
+    public void setPartNo(String partNo) {
+        this.partNo = partNo;
+    }
+
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
+    }
+
+    private String deptName;
+
     public Integer getId() {
         return id;
     }

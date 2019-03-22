@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.cheng.base.domain.Dept;
 import com.cheng.base.service.IDeptService;
 import com.cheng.base.service.ISignRecordService;
+import com.cheng.login.domain.User;
+import com.cheng.login.service.IUserService;
 import com.cheng.redis.JedisClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +35,8 @@ public class ViewController {
     private ISignRecordService signRecordService;
     @Autowired
     private IDeptService deptService;
+    @Autowired
+    private IUserService userService;
 
     @RequestMapping("/login")
     public String toLoginPage(){
@@ -115,7 +119,7 @@ public class ViewController {
         ModelAndView modelAndView = new ModelAndView();
         Map para = new HashMap();
         List<Map<String, Object>> maps = signRecordService.selectSignInfo(para);
-        List<Dept> deptList = deptService.getAllDeptList();
+        List<Dept> deptList = deptService.getAllDeptList(para);
         modelAndView.setViewName("signinfo");
         modelAndView.addObject("signInfo",maps);
         modelAndView.addObject("deptList",deptList);
@@ -123,8 +127,21 @@ public class ViewController {
     }
 
     @RequestMapping("/userPage")
-    public String toUserPage(){
-        return "user";
+    public ModelAndView toUserPage(HttpServletRequest request){
+        String deptNo = request.getParameter("deptNo");
+        String userNo = request.getParameter("userNo");
+        String userName = request.getParameter("userName");
+        ModelAndView modelAndView = new ModelAndView();
+        Map para = new HashMap();
+        List<Dept> deptList = deptService.getAllDeptList(para);
+        para.put("deptNo","".equals(deptNo)?null:deptNo);
+        para.put("userNo","".equals(userNo)?null:userNo);
+        para.put("userName","".equals(userName)?null:userName);
+        List<User> userList = userService.selectUserInfoList(para);
+        modelAndView.setViewName("user");
+        modelAndView.addObject("deptList",deptList);
+        modelAndView.addObject("userList",userList);
+        return modelAndView;
     }
 
     @RequestMapping("/userInfoPage")
@@ -133,9 +150,14 @@ public class ViewController {
     }
 
     @RequestMapping("/deptPage")
-    public ModelAndView toDeptPage(){
+    public ModelAndView toDeptPage(HttpServletRequest request){
+        String deptNo = request.getParameter("deptNo");
+        String deptName = request.getParameter("deptName");
         ModelAndView modelAndView = new ModelAndView();
-        List<Dept> deptList = deptService.getAllDeptList();
+        Map<String,Object> para = new HashMap<>();
+        para.put("deptNo","".equals(deptNo)?null:deptNo);
+        para.put("deptName","".equals(deptName)?null:deptName);
+        List<Dept> deptList = deptService.getAllDeptList(para);
         modelAndView.addObject("deptList",deptList);
         modelAndView.setViewName("dept");
         return modelAndView;

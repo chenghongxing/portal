@@ -3,6 +3,7 @@ package com.cheng.base.mapper;
 import com.cheng.base.domain.Dept;
 
 import java.util.List;
+import java.util.Map;
 
 public interface DeptMapper {
     int deleteByPrimaryKey(Integer deptId);
@@ -17,5 +18,9 @@ public interface DeptMapper {
 
     int updateByPrimaryKey(Dept record);
 
-    List<Dept> selectAllDept();
+    List<Dept> selectAllDept(Map para);
+
+    Map<String,Object> getMaxDeptNo();
+
+    int deleteDeptByIds(Integer[] deptIds);
 }
