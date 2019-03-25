@@ -12,6 +12,7 @@
 
     <artifactId>portal-service</artifactId>
     <packaging>jar</packaging>
+    <name>${project.artifactId}</name>
 
     <dependencies>
         <dependency>
@@ -120,6 +121,50 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <!-- The configuration of the plugin -->
+                <configuration>
+                    <classesDirectory>target/classes</classesDirectory>
+                    <!-- Configuration of the archiver -->
+                    <archive>
+                        <manifest>
+                            <!-- 是否要把第三方jar放到manifest的classpath中        -->
+                            <addClasspath>true</addClasspath>
+                            <!--生成的manifest中classpath的前缀，因为要把第三方jar放到lib目录下，所以classpath的前缀是lib/-->
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <useUniqueVersions>false</useUniqueVersions>
+                            <!--  应用的main class  -->
+                            <mainClass>com.cheng.runer.ServiceProvider</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>.</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <!-- 把依赖的jar包,打成一个lib文件夹 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <type>jar</type>
+                            <includeTypes>jar</includeTypes>
+                            <outputDirectory>
+                                ${project.build.directory}/lib
+                            </outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
