@@ -109,7 +109,7 @@
 				display: inline-block;
 				width: 100px;
 				height: 80px;
-				float: right;
+				float: left;
 			}
 			#bottcent{
 				width: 200px;
@@ -119,12 +119,12 @@
 			.werpOne{
 				font-size: 30px;
 				display: inline-block;
-				width: 35px;
+				width: 30px;
 				height: 35px;
 				font-weight: 700;
 				line-height: 35px;
 				color: green;
-				margin-left: 15px;
+				margin-left: 10px;
 			}
 			.werpTwo{
 				font-size: 15px;
@@ -159,28 +159,37 @@
 					<p>上班</p>
 					<p>09:00</p>
 				</span>
-				<span class="sptwo">08:51 &nbsp;签到</span>
+				<#if (signRecord.signTime)??>
+                    <span class="sptwo" id="sgpan">${signRecord.signTime} &nbsp;签到</span>
+				    <#else >
+                        <button type="button" id="sgbut" class="btnone" onclick="doSignIn()">签到</button>
+				</#if>
 			</div>
 			<div class="op_one">
 				<span class="spone">
 					<p>下班</p>
 					<p>17:30</p>
 				</span>
-				<button type="button" class="btnone">签退</button>
+				<#if (signRecord.sgoutTime)??>
+                    <span class="sptwo" id="sgpan2">${signRecord.sgoutTime} &nbsp;签退</span>
+				    <#else >
+                        <button type="button" class="btnone" id="sgbut2" onclick="doSignOut()">签退</button>
+				</#if>
+
 			</div>
 		</div>
 		<div id="bottm">
 				<div id="bottcent">
 					<span class="werone">
 						<p>
-							<span class="werpOne">16</span>
+							<span class="werpOne">${attendance}</span>
 							<span class="werpTwo">%</span>
 						</p>
 						<p class="werpTree" style="margin-left: 18px;">出勤率</p>
 					</span>
 					<span class="weroneu">
 						<p style="margin-left: 15px;">
-							<span class="werpOne qwer">3</span>
+							<span class="werpOne qwer">${abnormal}</span>
 							<span class="werpTwo werpfont">次</span>
 						</p>
 						<p class="werpTree">异常考勤次数</p>
@@ -195,6 +204,9 @@
 				if(hour<10){
 					hour="0"+hour;
 				}
+                if(mins<10){
+                    mins="0"+mins;
+                }
 				$("#sg_time").html(hour+":"+mins);
 			},1000);
 			setInterval(function(){
@@ -207,6 +219,38 @@
 				day = '星期' + Week[day];
 				$("#sg_date").html(tb+"&nbsp;&nbsp;"+day);
 			},1000);
+			function doSignIn() {
+                $.ajax({
+                    type:"GET",
+                    url:"/portal-web/doSignIn",
+                    dataType:"json",
+                    success:function (data) {
+                        if (data["flag"]=="false"){
+                            alert(data["respMsg"]);
+                        }else {
+                            window.location.reload();
+                        }
+                    }
+                })
+            }
+            function doSignOut() {
+                $.ajax({
+                    type:"GET",
+                    url:"/portal-web/doSignOut",
+                    dataType:"json",
+                    success:function (data) {
+                        if (data["flag"]=="false"){
+                            alert(data["respMsg"]);
+                        }else {
+                            window.location.reload();
+                        }
+                    }
+                })
+            }
 		</script>
 	</body>
 </html>
+
+
+
+

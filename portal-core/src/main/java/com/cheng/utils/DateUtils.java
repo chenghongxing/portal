@@ -38,6 +38,24 @@ public class DateUtils {
         return getCurrentFormatDate("yyyy-MM");
     }
 
+    public static int getDayCountByYearMonth(int year,int month){
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR,year);
+        calendar.set(Calendar.MONTH,month-1);
+        calendar.set(Calendar.DATE,1);
+        calendar.roll(Calendar.DATE,-1);
+        int dayCount = calendar.get(Calendar.DATE);
+        return dayCount;
+    }
+
+    public static int getCurrentMonthDayCount(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DATE,1);
+        calendar.roll(Calendar.DATE,-1);
+        int maxDay = calendar.get(Calendar.DATE);
+        return maxDay;
+    }
+
     public static int cutTwoDateToDay(Date a, Date b) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Calendar calendar = Calendar.getInstance();

@@ -38,4 +38,6 @@ public interface IUserService {
     int insertUser(User user) throws  CustomException;
 
     User selectUserById(Integer userId) throws CustomException;
+
+    List<User> testMapString(Map para) throws CustomException;
 }

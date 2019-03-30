@@ -1,12 +1,16 @@
 package com.cheng.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.cheng.base.domain.Dept;
+import com.cheng.base.domain.SignRecord;
 import com.cheng.base.service.IDeptService;
 import com.cheng.base.service.ISignRecordService;
 import com.cheng.login.domain.User;
 import com.cheng.login.service.IUserService;
 import com.cheng.redis.JedisClient;
+import com.cheng.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +20,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,8 +50,19 @@ public class ViewController {
     }
 
     @RequestMapping("/welcome")
-    public String toWelcome(){
-        return "welcome";
+    public ModelAndView toWelcome(HttpServletRequest request){
+        ModelAndView modelAndView = new ModelAndView();
+        String sessionId = request.getSession().getId();
+        String userJosn = jedisClient.hget(sessionId,"user");
+        User user = JSON.parseObject(userJosn,new TypeReference<User>(){});
+        String date = DateUtils.getCurrentFormatDateLong19();
+        String time = date.substring(11,16);
+        String ta = time.substring(0,2);
+        time = time + (Integer.parseInt(ta)>12?"PM":"AM");
+        user.setLastLoginTime(time);
+        modelAndView.setViewName("welcome");
+        modelAndView.addObject("user",user);
+        return modelAndView;
     }
 
     @RequestMapping("/")
@@ -110,14 +127,46 @@ public class ViewController {
     }
 
     @RequestMapping("/signDoPage")
-    public String toSignDoPage(){
-        return "signdo";
+    public ModelAndView toSignDoPage(HttpServletRequest request){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("signdo");
+        String sessionId = request.getSession().getId();
+        String userJson = jedisClient.hget(sessionId,"user");
+        JSONObject jsonObject = JSONObject.parseObject(userJson);
+        String userNo = jsonObject.get("userNo").toString();
+        String nowDate = DateUtils.getCurrentFormatDateShort10();
+        Map<String,Object> para = new HashMap<>();
+        para.put("userNo",userNo);
+        para.put("nowDate",nowDate);
+        SignRecord signRecord = signRecordService.selectSignRecordByDate(para);
+        modelAndView.addObject("signRecord",signRecord);
+        Calendar calendar = Calendar.getInstance();
+        int month = calendar.get(Calendar.MONTH)+1;
+        para.clear();
+        para.put("userNo",userNo);
+        para.put("month",month);
+        para.put("nowDate",DateUtils.getCurrentFormatDateShort10());
+        int countOne = signRecordService.selectSignCountOne(para);
+        int countTwo = signRecordService.selectSignCountTwo(para);
+        int dayCount = DateUtils.getCurrentMonthDayCount();
+        BigDecimal attendance = new BigDecimal(((countOne*100)/dayCount)).setScale(BigDecimal.ROUND_HALF_UP);
+        modelAndView.addObject("attendance",attendance.intValue());
+        modelAndView.addObject("abnormal",countTwo);
+        return modelAndView;
     }
 
     @RequestMapping("/signInfoPage")
-    public ModelAndView toSignInfoPage(){
+    public ModelAndView toSignInfoPage(HttpServletRequest request){
+        String deptNo = request.getParameter("deptNo");
+        String sgDate = request.getParameter("sgDate");
+        String userNo = request.getParameter("userNo");
+        String userName = request.getParameter("userName");
         ModelAndView modelAndView = new ModelAndView();
         Map para = new HashMap();
+        para.put("deptNo","".equals(deptNo)?null:deptNo);
+        para.put("nowDate","".equals(sgDate)?null:sgDate);
+        para.put("userNo","".equals(userNo)?null:userNo);
+        para.put("userName","".equals(userName)?null:userName);
         List<Map<String, Object>> maps = signRecordService.selectSignInfo(para);
         List<Dept> deptList = deptService.getAllDeptList(para);
         modelAndView.setViewName("signinfo");
@@ -161,5 +210,19 @@ public class ViewController {
         modelAndView.addObject("deptList",deptList);
         modelAndView.setViewName("dept");
         return modelAndView;
+    }
+
+    @RequestMapping("/testMapString")
+    @ResponseBody
+    public Object testMapString(HttpServletRequest request){
+        String status = request.getParameter("status");
+        String userNo = request.getParameter("userNo");
+        String userName = request.getParameter("userName");
+        Map<String,Object> para = new HashMap<>();
+        para.put("status",status);
+        para.put("userNo",userNo);
+        para.put("userName",userName);
+        List<User> userList = userService.testMapString(para);
+       return userList;
     }
 }

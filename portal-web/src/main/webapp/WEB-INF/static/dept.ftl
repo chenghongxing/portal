@@ -199,7 +199,21 @@
         })
     }
     function saveDept() {
-        $("#saveDept").submit();
+        $.ajax({
+            type:"GET",
+            url:"/portal-web/checkBossName",
+            contentType:"application/json;charset=utf-8",
+            data:{"bossName":$("#bossName").val()},
+            dataType:"json",
+            success:function (data) {
+                if (data["flag"]=="false"){
+                    alert("填写的负责人不存在！")
+                    $("#bossName").val("");
+                }else {
+                    $("#saveDept").submit();
+                }
+            }
+        })
     }
     function getDeptById(deptId) {
         $.ajax({
@@ -217,7 +231,21 @@
         })
     }
     function updateDept() {
-        $("#updateDept").submit();
+        $.ajax({
+            type:"GET",
+            url:"/portal-web/checkBossName",
+            contentType:"application/json;charset=utf-8",
+            data:{"bossName":$("#bossName2").val()},
+            dataType:"json",
+            success:function (data) {
+                if (data["flag"]=="false"){
+                    alert("填写的负责人不存在！")
+                    $("#bossName2").val("");
+                }else {
+                    $("#updateDept").submit();
+                }
+            }
+        })
     }
     function doDelete() {
         var items = document.getElementsByName("ckbox");
@@ -238,36 +266,6 @@
     }
     function queryDept() {
         $("#queryDept").submit();
-    }
-    function checkBoss() {
-        $.ajax({
-            type:"GET",
-            url:"/portal-web/checkBossName",
-            contentType:"application/json;charset=utf-8",
-            data:{"bossName":$("#bossName").val()},
-            dataType:"json",
-            success:function (data) {
-                if (data["flag"]=="false"){
-                    alert("填写的负责人不存在！")
-                    $("#bossName").val("");
-                }
-            }
-        })
-    }
-    function checkBoss2() {
-        $.ajax({
-            type:"GET",
-            url:"/portal-web/checkBossName",
-            contentType:"application/json;charset=utf-8",
-            data:{"bossName":$("#bossName2").val()},
-            dataType:"json",
-            success:function (data) {
-                if (data["flag"]=="false"){
-                    alert("填写的负责人不存在！")
-                    $("#bossName2").val("");
-                }
-            }
-        })
     }
 </script>
 </html>
